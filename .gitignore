@@ -1,7 +1,9 @@
 # env files
-server/.env
 client/.env
-client/.env.local
+server/.env
+client/.env.*
+server/.env.*
+!.env.example
 
 # node_modules
 client/node_modules
