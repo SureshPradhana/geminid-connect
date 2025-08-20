@@ -67,31 +67,31 @@ app.post('/auth/send-otp', async (req, res) => {
 		const { phone } = req.body;
 		if (!phone) return res.status(400).json({ error: 'phone required' });
 
-		await client.verify.services(TWILIO_VERIFY_SID).verifications.create({
-			to: phone,
-			channel: 'sms'
-		});
+		const verification = await client.verify.v2
+			.services(process.env.TWILIO_VERIFY_SID)
+			.verifications.create({ to: phone, channel: 'sms' });
 
-		return res.json({ sent: true });
+		return res.json({ ok: true, status: verification.status });
 	} catch (err) {
 		console.error('send-otp err', err?.message || err);
 		return res.status(500).json({ error: err?.message || 'error' });
 	}
 });
 
+
 app.post('/auth/verify-otp', async (req, res) => {
 	try {
 		const { phone, code } = req.body;
-		if (!phone || !code) return res.status(400).json({ error: 'phone and code required' });
+		if (!phone || !code)
+			return res.status(400).json({ error: 'phone and code required' });
 
-		const check = await client.verify.services(TWILIO_VERIFY_SID).verificationChecks.create({
-			to: phone,
-			code
-		});
+		const check = await client.verify.v2
+			.services(process.env.TWILIO_VERIFY_SID)
+			.verificationChecks.create({ to: phone, code });
 
 		if (check.status === 'approved') {
 			const token = signToken({ sub: phone });
-			// HttpOnly cookie — secure: true in prod under HTTPS
+			// HttpOnly cookie — secure: true in production with HTTPS
 			res.cookie('token', token, {
 				httpOnly: true,
 				secure: false,
@@ -107,6 +107,7 @@ app.post('/auth/verify-otp', async (req, res) => {
 		return res.status(500).json({ error: err?.message || 'error' });
 	}
 });
+
 
 app.get('/auth/whoami', (req, res) => {
 	const token = req.cookies?.token;
