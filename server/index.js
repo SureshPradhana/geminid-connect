@@ -161,34 +161,23 @@ app.post('/api/sms', requireAuth, async (req, res) => {
 	}
 });
 
-app.post('/api/call', requireAuth, async (req, res) => {
+
+app.post('/api/call', async (req, res) => {
 	try {
-		const { to, say } = req.body;
-		if (!to) return res.status(400).json({ error: 'to is required' });
-
-		const url = `${req.protocol}://${req.get('host')}/twilio/voice?say=${encodeURIComponent(say || process.env.VOICE_GREETING || 'Hello!')}`;
-
+		const { phone, message } = req.body; // get the number from request if dynamic
+		const encodedMessage = encodeURIComponent(message);
 		const call = await client.calls.create({
-			to,
-			from: TWILIO_NUMBER,
-			url
+			to: phone || '+917075058230',
+			from: process.env.TWILIO_NUMBER,
+			url: `${process.env.BASE_URL}/twilio/voice?say=${encodedMessage}`
 		});
-
-		store.calls.unshift({
-			sid: call.sid,
-			to,
-			from: TWILIO_NUMBER,
-			say,
-			status: 'queued',
-			at: new Date().toISOString()
-		});
-
-		return res.json({ message: 'Call initiated', sid: call.sid });
+		res.json({ ok: true, sid: call.sid });
 	} catch (err) {
 		console.error('api/call err', err?.message || err);
-		return res.status(500).json({ error: err?.message || 'error' });
+		res.status(500).json({ error: err?.message || 'error' });
 	}
 });
+
 
 app.get('/api/activity', requireAuth, (_req, res) => {
 	res.json({ messages: store.messages, calls: store.calls });

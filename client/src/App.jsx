@@ -93,7 +93,7 @@ export default function App() {
     if (!callTo) return setToast('Enter a phone to call')
     setLoading(true)
     try {
-      const r = await makeCall({ to: callTo, say: callSay })
+      const r = await makeCall({ phone: callTo, message: callSay })
       setToast(r.message || 'Call started')
       await refresh()
     } catch (err) {
