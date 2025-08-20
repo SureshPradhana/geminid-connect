@@ -1,0 +1,12 @@
+# env files
+server/.env
+client/.env
+client/.env.local
+
+# node_modules
+client/node_modules
+server/node_modules
+
+# build outputs
+client/dist
+
