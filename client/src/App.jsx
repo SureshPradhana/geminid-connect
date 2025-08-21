@@ -101,13 +101,13 @@ export default function App() {
     } finally { setLoading(false) }
   }
 
-  if (phase === 'loading') return <div className="p-8">Loading…</div>
+  if (phase === 'loading') return <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">Loading…</div>
 
   // ANONYMOUS / SIGN IN
   if (phase !== 'authed') {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-red-600">
-      <div className="mx-auto max-w-xl p-6">
+      <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg">
         <h1 className="mb-4 text-2xl font-semibold">Geminid Connect</h1>
         {toast && <div className="mb-3 rounded p-3 bg-amber-500/10 text-amber-200">{toast}</div>}
 
