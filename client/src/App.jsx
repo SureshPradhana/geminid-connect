@@ -106,6 +106,7 @@ export default function App() {
   // ANONYMOUS / SIGN IN
   if (phase !== 'authed') {
     return (
+      <div className="flex items-center justify-center min-h-screen bg-red-600">
       <div className="mx-auto max-w-xl p-6">
         <h1 className="mb-4 text-2xl font-semibold">Geminid Connect</h1>
         {toast && <div className="mb-3 rounded p-3 bg-amber-500/10 text-amber-200">{toast}</div>}
@@ -128,6 +129,7 @@ export default function App() {
             </div>
           </form>
         )}
+      </div>
       </div>
     )
   }
