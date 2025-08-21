@@ -30,6 +30,12 @@ app.use(cors({
 	origin: CLIENT_ORIGIN,
 	credentials: true
 }));
+
+app.use((req, res, next) => {
+	console.log('Request Origin:', req.headers.origin);
+	next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
