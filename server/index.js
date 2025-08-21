@@ -177,6 +177,15 @@ app.post('/api/call', async (req, res) => {
 			from: process.env.TWILIO_NUMBER,
 			url: `${process.env.BASE_URL}/twilio/voice?say=${encodedMessage}`
 		});
+		// log in-memory for frontend
+		store.calls.unshift({
+			sid: call.sid,
+			to: phone,
+			from: TWILIO_NUMBER,
+			say: message,
+			status: 'queued',
+			at: new Date().toISOString()
+		});
 		res.json({ ok: true, sid: call.sid });
 	} catch (err) {
 		console.error('api/call err', err?.message || err);
